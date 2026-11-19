@@ -1,0 +1,119 @@
+/*
+Now playing:
+Travis Scott - Can't Feel Myself (feat. Playboi Carti, Lil Uzi Vert) [Can't Feel Myself]
+*/
+#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("O3")
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+#define raindrop ios_base::sync_with_stdio(false); cin.tie(nullptr);
+#define droptop(c, a, n) for (int c = (a); c < (n); ++c)
+#define cookie(c, n, a) for (int c = (n); c >= (a); --c)
+#define hotbox(wec) wec.begin(), wec.end()
+#define pb push_back
+#define ll long long
+
+int tab[100'001];
+vector<int> wec[100'001], op[100'001];
+int state[100'001];
+
+const int base = 1e5;
+int id[(base << 1) + 5], leaf[base + 5];
+vector<pair<int, int>> tree[(base << 1) + n];
+
+void checkf(int w) {
+    state[w] = 1;
+    int cur = 1e9 + 1;
+    for (int opt : wec[w]) {
+        for (int p : op[opt]) {
+            if (state[p] == 1) {
+                cout << "NIE";
+                exit(0);
+            }
+            if (state[p] == 0)
+                checkf(p);
+            cur = min(cur, abs(tab[p]));
+        }
+    }
+    if (tab[w] < 0) {
+        if (-tab[w] >= cur) {
+            cout << "NIE";
+            exit(0);
+        }
+    } else {
+        if (cur - 1 < 1) {
+            cout << "NIE";
+            exit(0);
+        }
+        tab[w] = cur - 1;
+    }
+    state[w] = 2;
+}
+
+int f() {
+    int n, s, m;
+    cin >> n >> s >> m;
+    droptop(i, 1, n + 1)
+    {
+        tab[i] = 1e9;
+    }
+    droptop(i, 0, s)
+    {
+        int x, y;
+        cin >> x >> y;
+        tab[x] = -y;
+    }
+    droptop(i, 0, m)
+    {
+        int l, r, k;
+        cin >> l >> r >> k;
+        op[i].resize(k);
+        bool par[1'001] = {};
+        droptop(j, 0, k)
+        {
+            cin >> op[i][j];
+            par[op[i][j]] = true;
+        }
+        droptop(j, l, r + 1)
+        {
+            if (par[j])
+                continue;
+            wec[j].pb(i);
+        }
+    }
+
+    // for (int i = 0; i <= 1; i++) {
+    //     // for (int o : wec[i]) {
+    //     //     cout << o << " ";
+    //     // }
+    //     for (int x : op[i]) {
+    //         cout << x << " ";
+    //     }
+    //     cout << endl;
+    // }
+    // return 0;
+
+    droptop(i, 1, n + 1)
+    {
+        if (state[i])
+            continue;
+        checkf(i);
+    }
+    cout << "TAK\n";
+    droptop(i, 1, n + 1)
+    {
+        cout << abs(tab[i]) << " ";
+    }
+    return 0;
+}
+
+signed main() {
+    raindrop;
+    int t = 1;
+    while (t--) {
+        f();
+    }
+    return 0;
+}

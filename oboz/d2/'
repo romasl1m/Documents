@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+vector<int> wec[5'001];
+int gre[5'001];
+int low[5'001];
+//1 lower 2 greater 0 none
+void dfs(int w, int gr){
+  if(gr == 1){
+    for(int ss : wec[w]){
+      if(ss < w and low[ss] < low[w] + 1){
+        dfs(ss, gr);
+      }
+    }
+  }else if(gr == 2){
+    for(int ss : wec[w]){
+      if(ss > w and gre[ss] < gre[w] + 1){
+        dfs(ss,gr);
+      }
+    }
+  }else{
+    for(int ss : wec[w]){
+      if(ss > w){
+        dfs(ss,2);
+      }else{
+        dfs(ss,1);
+      }
+    }
+  }
+}
+int main(){
+  int n,m;
+  cin >> n >> m;
+  for(int i = 0; i < m; i++){
+    int a,b;
+    cin >> a >> b;
+    wec[a].push_back(b);
+    wec[b].push_back(a);
+  }
+  int res = 0;
+  for(int i = 1; i <= n; i++){
+    dfs(i,0);
+    for(int j = 1; j <= n; j++){
+      res = max(res, gre[j]);
+      res = max(res, low[j]);
+      low[j] = 0;
+      gre[j] = 0;
+    }
+  }
+  cout << res << " ";
+}
