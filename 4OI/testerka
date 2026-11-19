@@ -1,9 +1,0 @@
-#!/bin/bash
-./f1 >$inp1
-./f2 >$inp2
-diff $inp1 $inp2
-if [$? -eq 0]; then
-  echo "BOMBOKLAT"
-else
-  echo "O HELL NAH"
-fi
